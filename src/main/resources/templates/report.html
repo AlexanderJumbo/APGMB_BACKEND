@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 20mm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        h1 {
+            color: #0a6c8d;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 2px 0 2px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        th.cliente-col, td.cliente-col {
+            width: 18%;
+        }
+    </style>
+</head>
+<body>
+<h1>Reporte de lecturas de agua potable</h1>
+
+<p><strong>FECHA DE EMISIÓN:</strong> <span th:text="${issueDate}"></span></p>
+<p><strong>MES DE CONSUMO:</strong> <span th:text="${lectureDate}"></span></p>
+
+<table>
+    <thead>
+    <tr>
+        <th>Fecha de Lectura</th>
+        <th>Cuenta</th>
+        <th>Medidor</th>
+        <th class="cliente-col">Cliente</th>
+        <th>Sector</th>
+        <th>Lectura Anterior</th>
+        <th>Lectura Actual</th>
+        <th>Consumo Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${details}">
+        <td th:text="${#dates.format(item.dateLecture, 'yyyy-MM-dd')}"></td>
+        <td th:text="${item.accountId}"></td>
+        <td th:text="${item.accountMeter}"></td>
+        <td th:text="${item.accountUser}" class="cliente-col"></td>
+        <td th:text="${item.nameSector}"></td>
+        <td th:text="${item.prevLecture}"></td>
+        <td th:text="${item.currentLecture}"></td>
+        <td th:text="${item.totalConsumption}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
