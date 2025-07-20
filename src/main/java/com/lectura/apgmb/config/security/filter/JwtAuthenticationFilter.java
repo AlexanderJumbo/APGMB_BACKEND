@@ -1,5 +1,6 @@
 package com.lectura.apgmb.config.security.filter;
 
+import com.lectura.apgmb.config.security.handler.CustomAuthenticationEntryPoint;
 import com.lectura.apgmb.entities.secutiry.JwtToken;
 import com.lectura.apgmb.entities.secutiry.User;
 import com.lectura.apgmb.exceptions.ObjectNotFoundException;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
@@ -34,6 +36,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenRepository jwtTokenRepository;
 
+    @Autowired
+    private CustomAuthenticationEntryPoint authenticationEntryPoint;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = jwtService.extractJwtFromRequest(request);
@@ -46,7 +51,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         boolean isValid = validateToken(token);
 
         if(!isValid){
-            filterChain.doFilter(request, response);
+            //filterChain.doFilter(request, response);
+            authenticationEntryPoint.commence(request, response,
+                    new AuthenticationException("Token inválido o expirado") {});
             return;
         }
 

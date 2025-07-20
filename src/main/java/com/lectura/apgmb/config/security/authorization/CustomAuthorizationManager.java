@@ -61,7 +61,6 @@ public class CustomAuthorizationManager implements AuthorizationManager<RequestA
     private boolean isExtraordinaryAction(String url, String httpMethod, Authentication authentication, String token) {
 
         Claims claims = jwtService.iExtractAllClaims(token);
-
         if(authentication == null || !(authentication instanceof UsernamePasswordAuthenticationToken)){
             throw new AuthenticationCredentialsNotFoundException("User not logged in");
         }
